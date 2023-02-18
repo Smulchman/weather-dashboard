@@ -13,7 +13,10 @@ function fillForecast(lat, lon){
     })
     .then(function (data) {
         console.log(data);
-        
+        for (var i = 0; i < 5; i++){
+            var dayCard = document.querySelector('#day-' + i);
+            // navigate through the children elements of daycard to add the proper info to the proper lis.
+        }
     })
 };
 
