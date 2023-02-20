@@ -1,12 +1,12 @@
 var cityList = document.querySelector('#city-list');
-// '+{statecode}+', including this in the URL allows us to specify the state we're searching in.
 
 var cityCords;
 var searchBtn = $('#search-btn');
 var searchInputEl = $('input[id="search-input"]');
 var cityNameEl = $('#city-name-here');
-// var index;
 
+
+// var index;
 // function getIndex(){
 // var tempindex = localStorage.getItem('index');
 // if (tempindex === null){
@@ -17,7 +17,6 @@ var cityNameEl = $('#city-name-here');
 // }
 // getIndex();
 
-// console.log(localStorage.getItem('Saved'));
 function loadSaved(){
     var tempSaved = localStorage.getItem('Saved');
     if (tempSaved === null){
@@ -39,8 +38,8 @@ function setListeners(){
 }
 
 function loadCords(event){
-    tempLon = event.target.getAttribute('lon');
-    tempLat = event.target.getAttribute('lat');
+    var tempLon = event.target.getAttribute('lon');
+    var tempLat = event.target.getAttribute('lat');
     fillForecast(tempLat, tempLon);
 }
 
@@ -54,14 +53,18 @@ function fillForecast(lat, lon){
         // console.log(data);
         cityNameEl[0].textContent = data.city.name;
         for (var i = 0; i < 6; i++){
+            var ind = i*8;
+            if (ind>39){
+                ind = 39;
+            }
             var dayCard = $('#day-' + i.toString());
             var imgIcon = dayCard.find('img');
-            var iconId = data.list[i].weather[0].icon.substring(0, 2) + 'd';
-            dayCard.children().children().children()[0].textContent = data.list[i].dt_txt.substring(0, 10);
+            var iconId = data.list[ind].weather[0].icon.substring(0, 2) + 'd';
+            dayCard.children().children().children()[0].textContent = data.list[ind].dt_txt.substring(0, 10);
             imgIcon.attr('src', 'http://openweathermap.org/img/wn/'+iconId+'@2x.png');
-            dayCard.children().children().children()[2].textContent = 'Temp: ' + data.list[i].main.temp + '°F';
-            dayCard.children().children().children()[3].textContent = 'Wind: ' + data.list[i].wind.speed + 'mph';
-            dayCard.children().children().children()[4].textContent = 'Humidity: ' + data.list[i].main.humidity + '%';
+            dayCard.children().children().children()[2].textContent = 'Temp: ' + data.list[ind].main.temp + '°F';
+            dayCard.children().children().children()[3].textContent = 'Wind: ' + data.list[ind].wind.speed + 'mph';
+            dayCard.children().children().children()[4].textContent = 'Humidity: ' + data.list[ind].main.humidity + '%';
             // navigate through the children elements of daycard to add the proper info to the proper list.
         }
     })
@@ -70,15 +73,15 @@ function fillForecast(lat, lon){
 searchBtn.on('click', function(){
     var cityName = searchInputEl.val();
     cityName = cityName.replace(/ /g, '+');
-    var cityData;
+    // var cityData;
     var requestUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=1&appid=3d51ff48e9ee8482ed210ebd0d533bdc';
     fetch(requestUrl)
     .then(function (response) {
         return response.json();
     })
     .then(function (data) {
-        console.log(data)
-        cityData = data;
+        // console.log(data)
+        // cityData = data;
         for (var i = 0; i < data.length; i++) {
             //Create a list element
             var listItem = document.createElement('li');
@@ -93,7 +96,7 @@ searchBtn.on('click', function(){
             // add event listener to the element
             // upload list item to local storage
             cityList.appendChild(listItem);
-            console.log(cityList.innerHTML);
+            // console.log(cityList.innerHTML);
             localStorage.setItem('Saved', cityList.innerHTML);
             // index++;
             // localStorage.setItem('index', index);
@@ -105,5 +108,3 @@ searchBtn.on('click', function(){
 
     event.preventDefault();
 })
-
-// when a user clicks on one of the saved cities, it populates the weather items.
