@@ -5,3 +5,7 @@ ul {
 .forecast-card li {
     font-size: small;
   }
+
+.list-group-item:hover {
+    cursor: pointer;
+}
