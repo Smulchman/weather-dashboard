@@ -35,7 +35,7 @@ function loadCords(event){
 
 // this function takes coordinates and then runs them through the open weather api to retrieve forecast information. Additionally, this function populates the forecast section with the data retrieved from the search.
 function fillForecast(lat, lon){
-    var requestUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ lat +'&lon='+ lon +'&units=imperial&appid=3d51ff48e9ee8482ed210ebd0d533bdc';
+    var requestUrl = 'https://api.openweathermap.org/data/2.5/forecast?lat='+ lat +'&lon='+ lon +'&units=imperial&appid=3d51ff48e9ee8482ed210ebd0d533bdc';
     fetch(requestUrl)
     .then(function (response) {
         return response.json();
@@ -52,7 +52,7 @@ function fillForecast(lat, lon){
             var imgIcon = dayCard.find('img');
             var iconId = data.list[ind].weather[0].icon.substring(0, 2) + 'd';
             dayCard.children().children().children()[0].textContent = data.list[ind].dt_txt.substring(0, 10);
-            imgIcon.attr('src', 'http://openweathermap.org/img/wn/'+iconId+'@2x.png');
+            imgIcon.attr('src', 'https://openweathermap.org/img/wn/'+iconId+'@2x.png');
             dayCard.children().children().children()[2].textContent = 'Temp: ' + data.list[ind].main.temp + '°F';
             dayCard.children().children().children()[3].textContent = 'Wind: ' + data.list[ind].wind.speed + 'mph';
             dayCard.children().children().children()[4].textContent = 'Humidity: ' + data.list[ind].main.humidity + '%';
@@ -66,7 +66,7 @@ searchBtn.on('click', function(){
     var cityName = searchInputEl.val();
     cityName = cityName.replace(/ /g, '+');
     // var cityData - this variable was originally intended to serve as a more easily accesable storage for the given data, but I deemed it unecessary. I'm keeping it as a comment in case it is the more useful version in the future.
-    var requestUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=1&appid=3d51ff48e9ee8482ed210ebd0d533bdc';
+    var requestUrl = 'https://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=1&appid=3d51ff48e9ee8482ed210ebd0d533bdc';
     fetch(requestUrl)
     .then(function (response) {
         return response.json();
