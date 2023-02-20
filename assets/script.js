@@ -28,10 +28,14 @@ function loadSaved(){
     }
 }
 loadSaved();
+setListeners();
 
 function setListeners(){
     // add event listeners to all children of the city list after the list is populated on initialization
-    // if cityList.children returns an array then I can iterate through that.
+    var cityArray = cityList.children;
+    for (var i = 0; i < cityArray.length; i++){
+        cityArray[i].addEventListener('click', loadCords);
+    }
 }
 
 function loadCords(event){
@@ -47,7 +51,7 @@ function fillForecast(lat, lon){
         return response.json();
     })
     .then(function (data) {
-        console.log(data);
+        // console.log(data);
         cityNameEl[0].textContent = data.city.name;
         for (var i = 0; i < 6; i++){
             var dayCard = $('#day-' + i.toString());
@@ -58,7 +62,7 @@ function fillForecast(lat, lon){
             dayCard.children().children().children()[2].textContent = 'Temp: ' + data.list[i].main.temp + '°F';
             dayCard.children().children().children()[3].textContent = 'Wind: ' + data.list[i].wind.speed + 'mph';
             dayCard.children().children().children()[4].textContent = 'Humidity: ' + data.list[i].main.humidity + '%';
-            // navigate through the children elements of daycard to add the proper info to the proper lis.
+            // navigate through the children elements of daycard to add the proper info to the proper list.
         }
     })
 };
