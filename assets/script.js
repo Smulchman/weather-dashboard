@@ -5,18 +5,7 @@ var searchBtn = $('#search-btn');
 var searchInputEl = $('input[id="search-input"]');
 var cityNameEl = $('#city-name-here');
 
-
-// var index;
-// function getIndex(){
-// var tempindex = localStorage.getItem('index');
-// if (tempindex === null){
-//     index = 0;
-// }
-// else
-//     index = tempindex;
-// }
-// getIndex();
-
+// this function populates the search history on initialization
 function loadSaved(){
     var tempSaved = localStorage.getItem('Saved');
     if (tempSaved === null){
@@ -29,20 +18,22 @@ function loadSaved(){
 loadSaved();
 setListeners();
 
+// this function adds event listeners to each item included in the search history after that list is populated on initialization
 function setListeners(){
-    // add event listeners to all children of the city list after the list is populated on initialization
     var cityArray = cityList.children;
     for (var i = 0; i < cityArray.length; i++){
         cityArray[i].addEventListener('click', loadCords);
     }
 }
 
+// this function retrieves the coordinate values of a given city and then inputs those values into the forecast search api
 function loadCords(event){
     var tempLon = event.target.getAttribute('lon');
     var tempLat = event.target.getAttribute('lat');
     fillForecast(tempLat, tempLon);
 }
 
+// this function takes coordinates and then runs them through the open weather api to retrieve forecast information. Additionally, this function populates the forecast section with the data retrieved from the search.
 function fillForecast(lat, lon){
     var requestUrl = 'http://api.openweathermap.org/data/2.5/forecast?lat='+ lat +'&lon='+ lon +'&units=imperial&appid=3d51ff48e9ee8482ed210ebd0d533bdc';
     fetch(requestUrl)
@@ -70,10 +61,11 @@ function fillForecast(lat, lon){
     })
 };
 
+// this function uses openweather's geocoding API to take a city name and get the longitude and lattitude for that city. After retrieving that data, it adds an element to the search history and saves the longitude and lattitude values as attributes for that element
 searchBtn.on('click', function(){
     var cityName = searchInputEl.val();
     cityName = cityName.replace(/ /g, '+');
-    // var cityData;
+    // var cityData - this variable was originally intended to serve as a more easily accesable storage for the given data, but I deemed it unecessary. I'm keeping it as a comment in case it is the more useful version in the future.
     var requestUrl = 'http://api.openweathermap.org/geo/1.0/direct?q=' + cityName + '&limit=1&appid=3d51ff48e9ee8482ed210ebd0d533bdc';
     fetch(requestUrl)
     .then(function (response) {
@@ -82,29 +74,25 @@ searchBtn.on('click', function(){
     .then(function (data) {
         // console.log(data)
         // cityData = data;
+        // since the search only returns one city the for loop is not wholly necessary, however I've kept this code in so that it can be easily changed to include more than one city associated with a given name. Not strictly necessary but unless this is made more modular users from Paris Texas will have no recourse.
         for (var i = 0; i < data.length; i++) {
             //Create a list element
             var listItem = document.createElement('li');
             listItem.classList.add("list-group-item");
-            //Set the text of the list element to the JSON response's .html_url property
             var content = (data[i].name + ', ' + data[i].state);
             listItem.textContent = content;
             listItem.setAttribute("lon", data[i].lon);
             listItem.setAttribute("lat", data[i].lat);
             listItem.setAttribute("name", data[i].name);
             listItem.setAttribute("state", data[i].state);
-            // add event listener to the element
-            // upload list item to local storage
             cityList.appendChild(listItem);
-            // console.log(cityList.innerHTML);
+            // the below line either uploads the full html for all list items or updates the existing saved item to include new searches. This allows the list to exist as one saved object that can be easily updated and retrieved as needed.
             localStorage.setItem('Saved', cityList.innerHTML);
-            // index++;
-            // localStorage.setItem('index', index);
             listItem.addEventListener('click', loadCords)
           }
+            // populates the forecast section with information  
           fillForecast(data[0].lat, data[0].lon);
     });
-    // populate the weather section with the data.
-
+    // I'm not certain why event is deprecated here but without this line included the page reloads on search.
     event.preventDefault();
 })

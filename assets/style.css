@@ -6,6 +6,7 @@ ul {
     font-size: small;
   }
 
+  /* this class sets the cursor to change to a pointer when hovering over list elements containing previously searched cities. */
 .list-group-item:hover {
     cursor: pointer;
 }
